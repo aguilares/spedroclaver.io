@@ -1,0 +1,83 @@
+SERVIDOR: se crea la carpeta para el servidor; ejemplo: server
+ahi dentro ejecutar:
+
+npm init --yes: creacion de la aplicacion del lado servidor
+
+npm i instal express: para el servidor web instalar express
+
+npm i nodemon --save-dev: para que reinicie el servidor cada ves que se hace un contrl-s o guardar un archivo
+
+npm i multer: para recibir archivos
+npm i mysql express-miconnection: mysql, es el driver de la bd mysql y express-connection es para la conexion con  las base de datos mysql 
+npm i cors: permite hacer las peticiones desde el cliente
+
+npm install --save express jsonwebtoken para el token de la aplicacion
+npm install body-parser para entender las peticiones post
+npm install --save express-validator para las validaciones
+
+ERRORES 
+
+1 : ok_bd, exito en la operacion -
+2 : error en la operacion insertar, eliminar, buscar, select, update 
+3 : false_rep valores repetidos -
+4 : false_bd error en la conexion a la base de datos  -
+5 : error con los datos en la validadacion   -
+6 : false error en la optencion de la sesion del usuario   -
+7 : no existe, caso de eliminar o buscar informacion
+
+
+mas general 
+0 FALLA
+1 EXITO
+
+
+
+
+
+CLIENTE
+
+npx create-react-app nombre de la aplicaion
+
+npm i booststrap : booststrap para react
+npm i reactstrap : los componentes de booststrap para react
+
+
+PARA LOS ICONOS DE FONTAWESONME iconos editar y eliminar
+
+npm i --save @fortawesome/fontawesome-svg-core  @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome @fortawesome/free-brands-svg-icons
+
+npm install react-router-dom => para las rutas en react
+
+npm install axios, md5 universal-cookie  peticiones http cifrdo de contraseñas y cockie
+
+npm install --save styled-components   para dar estilos a los componentes
+
+npm i --save @fortawesome/fontawesome-svg-core            //los iconos de fontawesome
+npm install --save @fortawesome/free-solid-svg-icons
+npm install --save @fortawesome/react-fontawesome
+//libreria para fecha 
+
+npm i @material-ui/pickers
+npm i @date-io/date-fns@1.x date-fns
+
+
+
+SQL
+para sacar el nombre para convertir la referencia en caso de las llaves foraneas en otras tablas
+SHOW CREATE TABLE nombre de la tabla
+ejemplo
+ALTER TABLE sistema ADD COLUMN idUsuario int, ADD CONSTRAINT `fkUsuario` FOREIGN KEY (idUsuario) REFERENCES usuario(id)
+
+TAMBIEN FUNCIONA DIRECTO ESTA LINEA DE CODIGO
+ALTER TABLE paciente ADD COLUMN idPersonal int, ADD CONSTRAINT `fkPersonal` FOREIGN KEY (idPersonal) REFERENCES usuario(id)
+
+la columna idUsuario y fkUsuario se crean directamente con esta linea de codigo
+
+PARA ELIMINAR CLAVE FORANEA
+alter table usuario drop foreign key index_sist -> este es el nombre del indice
+
+
+
+consultas SQL ruta token
+SELECT u.usuario as usuario, p.nombre as nombre, p.apellido1 as apellido1, p.apellido2 as apellido2, u.id as id, u.usuario as usuario, s.nombre as sistema, n.nivel as nivel, r.nombre as rol from sesiones se inner join usuario u on se.id_user = u.id inner join user_sist us on us.idUser = u.id inner join sistema s on us.idSist = s.id inner join nivel n on u.id_nivel = n.id inner join rol r on u.id_rol = r.id inner join personal p on p.id = u.id_personal where se.token = "1234" and u.estado = 1
+

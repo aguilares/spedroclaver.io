@@ -1,0 +1,30 @@
+.icono{
+    text-align: center;
+    font-size: 12px;
+    margin-top: 2px;
+    margin-bottom: 8px;
+    margin-right: 15- px;
+    margin-left: 0px;
+}
+.boton{
+    height: 28px;
+    width: 30px;
+    padding-bottom: 10;
+    padding-right: 10;
+}
+
+
+.styles {
+    height: 28px;
+    
+}
+
+.alturaCheck {
+    height: 50px;
+    /* background-color: ; */
+    color: azure;
+}
+.fondo{
+     background: url("./images/sellospc.png") center center no-repeat;
+    /* background-image: './images/sellospc.png'; */
+}

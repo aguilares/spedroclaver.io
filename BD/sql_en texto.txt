@@ -1,0 +1,226 @@
+
+
+CREATE table lab_examenes(
+    id int AUTO_INCREMENT,
+    nombre varchar(100) not null,
+    disponible boolean DEFAULT true not null,
+    id_area int not null,
+    PRIMARY key (id),
+    FOREIGN key (id_area) REFERENCES area(id)
+)
+
+CREATE table lab_hemoterapia(
+    id int AUTO_INCREMENT,
+    nombre varchar(100) not null,
+    disponible boolean DEFAULT true not null,
+    id_area int not null,
+    PRIMARY key (id),
+    FOREIGN key (id_area) REFERENCES area(id)
+)
+
+CREATE table lab_bsangre(
+    id int AUTO_INCREMENT,
+    nombre varchar(100) not null,
+    disponible boolean DEFAULT true not null,
+    id_area int not null,
+    PRIMARY key (id),
+    FOREIGN key (id_area) REFERENCES area(id)
+)
+
+
+CREATE table salas(
+    id int AUTO_INCREMENT,
+    nombre varchar(50) not null,
+    id_area int not null,
+    estado boolean not null defaut true,
+    PRIMARY key (id),
+    FOREIGN key (id_area) REFERENCES area(id)
+)
+
+modificar la columna nombre de las 3 tablas de examenes
+ALTER table lab_examenes add nombre varchar(70) not null AFTER id -> añadir columna
+
+///////////////////
+
+
+CREATE table camas(
+    id int AUTO_INCREMENT,
+    numero int not null,
+    descripcion varchar(300) not nulL,
+    id_sala int not null,
+    estado boolean not null default true,
+    PRIMARY key (id),
+    FOREIGN key (id_sala) REFERENCES salas(id)
+)
+
+create table seguro(
+    id int AUTO_INCREMENT,
+    nombre varchar(50) not null UNIQUE,
+    id_centro int not null,
+    estado boolean DEFAULT true,
+    PRIMARY key (id),
+    FOREIGN KEY (id_centro) REFERENCES centro (id)
+)
+
+create table solex_lsss(
+    id int AUTO_INCREMENT,
+    validacion int not null DEFAULT 0,
+    realizado boolean not null DEFAULT false,
+    fecha_sol date not null, 
+    hora_sol time not null,
+    hora_toma_muestra time not null,
+    hora_rec_sol time,
+    num_historial int not null,
+    diagnostico	varchar(100) not null,
+    id_area int not null,
+    id_area_tarea int not null,
+    id_cama int,
+    id_seguro int NOT NULL,
+    id_paciente int not null,
+    id_usuario int not null,
+    estado boolean default true,
+    primary key(id),
+    FOREIGN KEY (id_cama) REFERENCES camas(id),
+    FOREIGN KEY (id_area) REFERENCES area(id),
+    FOREIGN KEY (id_area_tarea) REFERENCES area(id),
+    FOREIGN key (id_paciente) REFERENCES paciente(id),
+    FOREIGN key (id_seguro) REFERENCES seguros(id),
+    FOREIGN key (id_usuario) REFERENCES usuario(id)
+)
+create table item_lab_examen(
+    id int AUTO_INCREMENT,
+    id_lab_examen int not null,
+    id_solex_lsss int not null,
+    PRIMARY KEY (id),
+    FOREIGN key (id_lab_examen) REFERENCES  lab_examenes(id),
+    FOREIGN key (id_solex_lsss) REFERENCES  solex_lsss(id)
+)
+create table item_lab_hemoterapia(
+    id int AUTO_INCREMENT,
+    id_lab_hemoterapia int not null,
+    id_solex_lsss int not null,
+    PRIMARY KEY (id),
+    FOREIGN key (id_lab_hemoterapia) REFERENCES  lab_hemoterapia(id),
+    FOREIGN key (id_solex_lsss) REFERENCES  solex_lsss(id)
+)
+
+create table item_lab_bsangre(
+    id int AUTO_INCREMENT,
+    id_lab_bsangre int not null,
+    id_solex_lsss int not null,
+    PRIMARY KEY (id),
+    FOREIGN key (id_lab_bsangre) REFERENCES  lab_bsangre(id),
+    FOREIGN key (id_solex_lsss) REFERENCES  solex_lsss(id)
+)
+
+
+
+
+
+create table seguros(
+	id int AUTO_INCREMENT,
+    nombre varchar(50) not null,
+    estado boolean not null DEFAULT true,
+    primary key (id)
+)
+
+create table centro_seguro(
+	id int AUTO_INCREMENT,
+    id_centro int not null,
+    id_seguro int not null,
+    PRIMARY key (id),
+    FOREIGN KEY (id_centro) REFERENCES centro(id),
+    FOREIGN key (id_seguro)REFERENCES seguros(id)
+)
+
+
+
+/// consultas para obtener el id del area con examenes que realizara el o los examenes, con el unico parametro id del centro
+
+SELECT id, nombre from area where estado = true   and (id = (SELECT DISTINCT( a.id) from lab_examenes le inner join area a on le.id_area = a.id inner join unidad u on a.id_unidad = u.id inner join centro c on u.id_centro = c.id WHERE le.disponible= true and a.estado= true and u.estado=true and c.estado= true and c.id = 3) or id = (SELECT DISTINCT( a.id) from lab_hemoterapia le inner join area a on le.id_area = a.id inner join unidad u on a.id_unidad = u.id inner join centro c on u.id_centro = c.id WHERE le.disponible= true and a.estado= true and u.estado=true and c.estado= true and c.id = 3) or id = (SELECT DISTINCT( a.id) from lab_bsangre le inner join area a on le.id_area = a.id inner join unidad u on a.id_unidad = u.id inner join centro c on u.id_centro = c.id WHERE le.disponible= true and a.estado= true and u.estado=true and c.estado= true and c.id = 3))
+
+SELECT
+    id,
+    nombre
+FROM
+    AREA
+WHERE
+    estado = TRUE AND(
+        id =(
+        SELECT DISTINCT
+            (a.id)
+        FROM
+            lab_examenes le
+        INNER JOIN AREA a ON
+            le.id_area = a.id
+        INNER JOIN unidad u ON
+            a.id_unidad = u.id
+        INNER JOIN centro c ON
+            u.id_centro = c.id
+        WHERE
+            le.disponible = TRUE AND a.estado = TRUE AND u.estado = TRUE AND c.estado = TRUE AND c.id = 3
+    ) OR id =(
+    SELECT DISTINCT
+        (a.id)
+    FROM
+        lab_hemoterapia le
+    INNER JOIN AREA a ON
+        le.id_area = a.id
+    INNER JOIN unidad u ON
+        a.id_unidad = u.id
+    INNER JOIN centro c ON
+        u.id_centro = c.id
+    WHERE
+        le.disponible = TRUE AND a.estado = TRUE AND u.estado = TRUE AND c.estado = TRUE AND c.id = 3
+) OR id =(
+    SELECT DISTINCT
+        (a.id)
+    FROM
+        lab_bsangre le
+    INNER JOIN AREA a ON
+        le.id_area = a.id
+    INNER JOIN unidad u ON
+        a.id_unidad = u.id
+    INNER JOIN centro c ON
+        u.id_centro = c.id
+    WHERE
+        le.disponible = TRUE AND a.estado = TRUE AND u.estado = TRUE AND c.estado = TRUE AND c.id = 3
+)
+    )
+
+
+
+
+
+    ////////////////////otra version de base de datos ////////////////////////////////////
+    CREATE TABLE laboratorios(
+    id int not null AUTO_INCREMENT,
+    nombre varchar(100),
+    estado boolean DEFAULT true,
+    PRIMARY KEY (id)
+)
+
+
+
+create table servicios(
+	id int not null AUTO_INCREMENT,
+    nombre text not null UNIQUE,
+    primary key (id)
+)
+CREATE TABLE tipo_examen(
+	id int AUTO_INCREMENT,
+    nombre varchar(100) not null UNIQUE,
+    id_servicios int not null,
+    estado boolean DEFAULT true,
+    primary key(id),
+    FOREIGN key(id_servicios) REFERENCES servicios(id)
+)
+
+CREATE table examen(
+	id int AUTO_INCREMENT,
+    nombre varchar(100) not null UNIQUE,
+    id_tipo_examen int not null,
+    estado boolean DEFAULT true,
+    primary key(id),
+    FOREIGN key (id_tipo_examen) REFERENCES tipo_examen(id)
+)
